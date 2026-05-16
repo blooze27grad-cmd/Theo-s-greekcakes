@@ -1,1 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Korean with Bok · Korean Language & Culture Lessons</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+KR:wght@300;400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
+  <style>
+    /* ══════════════════════════════════════════
+       DESIGN TOKENS — edit here to retheme site
+    ══════════════════════════════════════════ */
+    :root {
+      /* Base neutrals */
+      --white:       #ffffff;
+      --offwhite:    #f9f8f6;
+      --surface:     #f3f1ee;
+      --border:      #e4e0d8;
+      --border2:     #d5cfc4;
+
+      /* Ink */
+      --ink:         #0f1623;
+      --ink2:        #2d3547;
+      --muted:       #7a7f8e;
+
+      /* Korean-flag inspired palette */
+      --navy:        #1b2d5b;   /* Taegukgi deep navy */
+      --navy-mid:    #2a4080;   /* hover state */
+      --navy-wash:   #eef2fb;   /* very light navy tint */
+      --red:         #c0392b;   /* muted Dancheong / Taegukgi red */
+      --red-soft:    #d9534f;   /* hover */
+      --red-wash:    #fdf2f1;   /* light red tint */
+
+      /* Accent */
+      --gold:        #b8973a;   /* Joseon-era gold — used sparingly */
+    }
+
+    /* ══════ BASE ══════ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--offwhite);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════ TYPE ══════ */
+    h1, h2   { font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -0.015em; }
+    h3       { font-family: 'Outfit', sans-serif; font-weight: 600; }
+    .kr      { font-family: 'Noto Serif KR', serif; }
+
+    /* ══════ SUBTLE DANCHEONG GRID
+       Repeating orthogonal lines referencing traditional
+       Korean architectural ceiling patterns (dancheong)
+    ══════ */
+    .dancheong-bg {
+      background-image:
+        repeating-linear-gradient(0deg,  transparent, transparent 39px, rgba(27,45,91,0.045) 39px, rgba(27,45,91,0.045) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(27,45,91,0.045) 39px, rgba(27,45,91,0.045) 40px);
+    }
+
+    /* Fine dot grid */
+    .dot-bg {
+      background-image: radial-gradient(circle, rgba(27,45,91,0.06) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+
+    /* ══════ NAVIGATION ══════ */
+    #navbar { transition: background 0.35s ease, box-shadow 0.35s ease; }
+    #navbar.scrolled {
+      background: rgba(249,248,246,0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 var(--border);
+    }
+    .nav-link {
+      font-size: 14px; font-weight: 500;
+      color: var(--ink2); text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-link::after {
+      content: ''; position: absolute;
+      left: 0; bottom: -3px;
+      width: 0; height: 1.5px;
+      background: var(--navy);
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover { color: var(--navy); }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ══════ BUTTONS ══════ */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--navy); color: #fff;
+      padding: 14px 30px; border-radius: 3px;
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      letter-spacing: 0.02em; text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
+      box-shadow: 0 2px 12px rgba(27,45,91,0.2);
+    }
+    .btn-primary:hover {
+      background: var(--navy-mid); transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(27,45,91,0.28);
+    }
+    .btn-primary.red { background: var(--red); box-shadow: 0 2px 12px rgba(192,57,43,0.2); }
+    .btn-primary.red:hover { background: var(--red-soft); box-shadow: 0 6px 22px rgba(192,57,43,0.3); }
+
+    .btn-text {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--navy); font-size: 15px; font-weight: 600; text-decoration: none;
+      border-bottom: 1.5px solid rgba(27,45,91,0.28); padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+    .btn-text:hover { border-color: var(--navy); }
+
+    /* ══════ SECTION LABEL ══════ */
+    .s-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--navy); margin-bottom: 18px;
+    }
+    .s-label::before {
+      content: ''; display: block;
+      width: 22px; height: 1.5px; background: var(--gold); flex-shrink: 0;
+    }
+
+    /* ══════ RED RULE ══════ */
+    .rule {
+      width: 38px; height: 2px;
+      background: linear-gradient(90deg, var(--red), transparent);
+      border-radius: 2px; margin: 20px 0 28px;
+    }
+    .rule.center { margin-left: auto; margin-right: auto; }
+
+    /* ══════ CARDS ══════ */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 34px 30px;
+      transition: transform 0.28s cubic-bezier(.2,.6,.3,1), box-shadow 0.28s cubic-bezier(.2,.6,.3,1), border-color 0.28s;
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 3px; height: 0; background: var(--navy);
+      transition: height 0.3s ease;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(15,22,35,0.09); border-color: var(--border2); }
+    .card:hover::before { height: 100%; }
+
+    /* ══════ TESTIMONIALS ══════ */
+    .t-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 2px;
+      padding: 36px 30px 28px; position: relative;
+      transition: transform 0.28s, box-shadow 0.28s;
+    }
+    .t-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(15,22,35,0.08); }
+    .t-card .qm {
+      font-family: 'Cormorant Garamond', serif; font-size: 96px; line-height: 0.8;
+      color: rgba(27,45,91,0.07); position: absolute;
+      top: 24px; left: 24px; user-select: none; pointer-events: none;
+    }
+    .stars { color: var(--gold); font-size: 13px; letter-spacing: 3px; }
+
+    /* ══════ AVATAR ══════ */
+    .avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; color: #fff; flex-shrink: 0;
+    }
+
+    /* ══════ ICON BOX ══════ */
+    .icon-box {
+      width: 46px; height: 46px; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 20px; flex-shrink: 0;
+    }
+
+    /* ══════ PRICING ══════ */
+    .pricing-main { background: var(--navy); border-radius: 2px; color: #fff; overflow: hidden; position: relative; }
+    .pricing-main::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'%3E%3Crect x='1' y='1' width='58' height='58'/%3E%3Crect x='10' y='10' width='40' height='40'/%3E%3Cline x1='30' y1='0' x2='30' y2='60'/%3E%3Cline x1='0' y1='30' x2='60' y2='30'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .price-num { font-family: 'Cormorant Garamond', serif; font-size: 80px; font-weight: 500; line-height: 1; color: #fff; }
+    .price-num sup { font-size: 36px; vertical-align: super; line-height: 0; }
+    .price-num small { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 300; color: rgba(255,255,255,0.45); }
+    .ck-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .ck-row .ck { color: var(--gold); font-size: 13px; margin-top: 3px; }
+
+    /* ══════ AUDIENCE CARDS ══════ */
+    .a-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 2px;
+      padding: 32px 24px; text-align: center;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .a-card:hover { border-color: var(--navy); transform: translateY(-5px); box-shadow: 0 12px 36px rgba(27,45,91,0.1); }
+    .a-icon { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 18px; }
+    .a-tag { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+    /* ══════ FORM ══════ */
+    .f-field {
+      width: 100%; background: var(--offwhite); border: 1.5px solid var(--border); border-radius: 3px;
+      padding: 13px 16px; font-family: 'Outfit', sans-serif; font-size: 15px; color: var(--ink);
+      outline: none; transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .f-field::placeholder { color: var(--muted); }
+    .f-field:focus { border-color: var(--navy); background: var(--white); box-shadow: 0 0 0 3px rgba(27,45,91,0.08); }
+    .f-label { display: block; font-size: 13px; font-weight: 600; color: var(--ink2); margin-bottom: 7px; letter-spacing: 0.02em; }
+
+    /* ══════ MOBILE MENU ══════ */
+    #mobileMenu {
+      display: none; flex-direction: column;
+      background: rgba(249,248,246,0.97);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border); padding: 8px 24px 24px;
+    }
+    #mobileMenu.open { display: flex; }
+    #mobileMenu a { padding: 12px 0; font-size: 15px; font-weight: 500; color: var(--ink); border-bottom: 1px solid var(--border); text-decoration: none; transition: color 0.2s; }
+    #mobileMenu a:last-child { border-bottom: none; }
+    #mobileMenu a:hover { color: var(--navy); }
+
+    /* ══════ SCROLL MOUSE ══════ */
+    .scroll-mouse {
+      width: 26px; height: 42px; border: 1.5px solid rgba(27,45,91,0.2); border-radius: 13px;
+      position: relative; display: flex; justify-content: center; align-items: flex-start; padding-top: 7px;
+    }
+    .scroll-mouse::after {
+      content: ''; width: 4px; height: 8px; background: var(--navy); border-radius: 2px;
+      animation: scrollDot 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollDot { 0% { transform:translateY(0); opacity:1; } 80% { transform:translateY(12px); opacity:0; } 100% { transform:translateY(0); opacity:0; } }
+
+    /* ══════ SCROLL-TO-TOP ══════ */
+    #scrollTop {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 44px; height: 44px; background: var(--navy); color: #fff;
+      border: none; border-radius: 2px; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s, transform 0.2s; box-shadow: 0 4px 16px rgba(27,45,91,0.3); z-index: 99;
+    }
+    #scrollTop.show { opacity: 1; pointer-events: auto; }
+    #scrollTop:hover { transform: translateY(-3px); }
+
+    /* ══════ FADE ANIMATION ══════ */
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ══════ THIN RULES ══════ */
+    .thin-rule { height: 1px; background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent); }
+  </style>
+
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: {
+        navy:'#1b2d5b', red:'#c0392b', gold:'#b8973a',
+        ink:'#0f1623', ink2:'#2d3547', muted:'#7a7f8e',
+        surface:'#f3f1ee', border:'#e4e0d8'
+      }}}
+    }
+  </script>
+</head>
+
+<body>
+
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <a href="#hero" class="flex items-center gap-3 no-underline">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.5" stroke="#1b2d5b" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="8.5"  stroke="#1b2d5b" stroke-width="1"/>
+        <circle cx="16" cy="16" r="3"    fill="#c0392b"/>
+        <line x1="2" y1="16" x2="7.5" y2="16" stroke="#1b2d5b" stroke-width="1"/>
+        <line x1="24.5" y1="16" x2="30" y2="16" stroke="#1b2d5b" stroke-width="1"/>
+        <line x1="16" y1="2" x2="16" y2="7.5" stroke="#1b2d5b" stroke-width="1"/>
+        <line x1="16" y1="24.5" x2="16" y2="30" stroke="#1b2d5b" stroke-width="1"/>
+      </svg>
+      <span style="font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:500; color:var(--ink); letter-spacing:0.01em;">Korean with Bok</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#benefits"     class="nav-link">Benefits</a>
+      <a href="#about"        class="nav-link">About</a>
+      <a href="#pricing"      class="nav-link">Pricing</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#contact" class="btn-primary" style="padding:10px 22px; font-size:14px;">Book Free Trial</a>
+    </div>
+
+    <button id="menuBtn" class="md:hidden flex flex-col gap-[5px] p-2" aria-label="Toggle menu">
+      <span id="bar1" class="block w-5 h-[1.5px] bg-ink transition-all duration-200 rounded"></span>
+      <span id="bar2" class="block w-5 h-[1.5px] bg-ink transition-all duration-200 rounded"></span>
+      <span id="bar3" class="block w-5 h-[1.5px] bg-ink transition-all duration-200 rounded"></span>
+    </button>
+  </div>
+
+  <div id="mobileMenu">
+    <a href="#benefits"     onclick="closeMobileMenu()">Benefits</a>
+    <a href="#about"        onclick="closeMobileMenu()">About</a>
+    <a href="#pricing"      onclick="closeMobileMenu()">Pricing</a>
+    <a href="#who"          onclick="closeMobileMenu()">Who It's For</a>
+    <a href="#testimonials" onclick="closeMobileMenu()">Reviews</a>
+    <a href="#contact"      onclick="closeMobileMenu()" style="color:var(--navy);font-weight:600;">Book a Free Trial →</a>
+  </div>
+</nav>
+
+
+<section id="hero" class="relative min-h-screen flex flex-col justify-center pt-24 pb-16 overflow-hidden" style="background:var(--white);">
+
+  <div class="dot-bg absolute inset-0 pointer-events-none" style="opacity:0.7;"></div>
+
+  <div class="absolute right-0 top-0 bottom-0 flex items-center pointer-events-none select-none overflow-hidden" style="width:55%;">
+    <span class="kr" style="font-size:clamp(140px,20vw,300px); font-weight:300; color:rgba(27,45,91,0.045); line-height:1; padding-right:4vw; white-space:nowrap;">한국어</span>
+  </div>
+
+  <svg aria-hidden="true" style="position:absolute;top:-90px;right:-90px;width:400px;height:400px;opacity:0.055;pointer-events:none;" viewBox="0 0 400 400" fill="none">
+    <circle cx="200" cy="200" r="190" stroke="#1b2d5b" stroke-width="1"/>
+    <circle cx="200" cy="200" r="145" stroke="#1b2d5b" stroke-width="1"/>
+    <circle cx="200" cy="200" r="100" stroke="#1b2d5b" stroke-width="1"/>
+    <circle cx="200" cy="200" r="55"  stroke="#c0392b" stroke-width="1.5"/>
+    <circle cx="200" cy="200" r="16"  fill="#c0392b" opacity="0.5"/>
+  </svg>
+
+  <svg aria-hidden="true" style="position:absolute;bottom:-50px;left:-50px;width:220px;height:220px;opacity:0.045;pointer-events:none;" viewBox="0 0 220 220" fill="none">
+    <circle cx="110" cy="110" r="104" stroke="#1b2d5b" stroke-width="1"/>
+    <circle cx="110" cy="110" r="70"  stroke="#1b2d5b" stroke-width="1"/>
+    <circle cx="110" cy="110" r="36"  stroke="#c0392b" stroke-width="1"/>
+  </svg>
+
+  <div class="max-w-6xl mx-auto px-6 relative z-10 w-full">
+    <div class="max-w-2xl">
+
+      <div class="fade-up flex items-center gap-4 mb-10" style="transition-delay:0.05s;">
+        <span style="display:block; width:28px; height:1px; background:var(--gold);"></span>
+        <span class="kr" style="font-size:16px; font-weight:400; color:var(--navy); letter-spacing:0.05em;">안녕하세요</span>
+        <span style="font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted);">Annyeonghaseyo · Hello</span>
+      </div>
+
+      <h1 class="fade-up" style="font-size:clamp(52px,8vw,96px); line-height:1.04; font-weight:400; letter-spacing:-0.02em; margin-bottom:22px; transition-delay:0.13s;">
+        Korean Lessons<br/>
+        <em style="color:var(--navy); font-style:italic;">Language &amp; Culture</em>
+      </h1>
+
+      <p class="fade-up" style="font-size:clamp(16px,2vw,19px); line-height:1.72; color:var(--ink2); font-weight:300; max-width:520px; margin-bottom:40px; transition-delay:0.23s;">
+        Private Korean lessons focused on language, culture, and real-life conversation. Learn practical Korean for everyday situations with personalised guidance from Bok.
+      </p>
+
+      <div class="fade-up flex flex-wrap gap-4 items-center mb-14" style="transition-delay:0.33s;">
+        <a href="#contact" class="btn-primary">Book a Free Trial Lesson</a>
+        <a href="#about" class="btn-text">Meet your tutor →</a>
+      </div>
+
+      <div class="fade-up flex flex-wrap gap-6" style="transition-delay:0.43s;">
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--ink2);">
+          <span style="width:28px;height:28px;background:var(--navy-wash);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;">⭐</span>
+          5.0 rated · 100+ students
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--ink2);">
+          <span style="width:28px;height:28px;background:var(--red-wash);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--red);">✓</span>
+          30-minute free trial
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--ink2);">
+          <span style="width:28px;height:28px;background:var(--navy-wash);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;">📍</span>
+          CBD &amp; Melbourne
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 fade-up" style="transition-delay:0.55s;">
+    <div class="scroll-mouse"></div>
+  </div>
+</section>
+
+<div class="thin-rule"></div>
+
+
+<section id="benefits" class="py-24 px-6" style="background:var(--offwhite);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="max-w-xl mb-16 fade-up">
+      <div class="s-label">What You Gain</div>
+      <h2 style="font-size:clamp(36px,5vw,54px); line-height:1.1;">Real results.<br/>Real progress.</h2>
+      <div class="rule"></div>
+      <p style="font-size:16px; line-height:1.72; color:var(--ink2);">Every lesson is built around your specific goals — so you spend your time on exactly what matters to you.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <div class="card fade-up" style="transition-delay:0.07s;">
+        <div class="icon-box" style="background:var(--navy-wash);">🎓</div>
+        <h3 style="font-size:18px;margin-bottom:10px;">Korean Language & Culture</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Learn Korean through both language and culture, so you understand not just the words, but how Korean is naturally used.</p>
+      </div>
+
+      <div class="card fade-up" style="transition-delay:0.13s;">
+        <div class="icon-box" style="background:var(--red-wash);">💬</div>
+        <h3 style="font-size:18px;margin-bottom:10px;">Real-Life Conversation</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Build confidence through practical conversation practice for everyday situations, travel, family, study, and personal interest.</p>
+      </div>
+
+      <div class="card fade-up" style="transition-delay:0.19s;">
+        <div class="icon-box" style="background:#f4f0fc;">🧠</div>
+        <h3 style="font-size:18px;margin-bottom:10px;">Lessons Tailored to You</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">No textbook scripts. Bok designs each lesson around your level, goals, and interests — with a focus on useful Korean you can actually speak.</p>
+      </div>
+
+      <div class="card fade-up" style="transition-delay:0.07s;">
+        <div class="icon-box" style="background:#fffaed;">⏱️</div>
+        <h3 style="font-size:18px;margin-bottom:10px;">Learn at Your Own Pace</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">No pressure, no rushing. Bok teaches at a comfortable pace with clear explanations, practical examples, and supportive guidance.</p>
+      </div>
+
+      <div class="card fade-up" style="transition-delay:0.13s;">
+        <div class="icon-box" style="background:var(--navy-wash);">🌏</div>
+        <h3 style="font-size:18px;margin-bottom:10px;">Flexible Online Lessons</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Learn from anywhere via Zoom — no commute, no wasted time. Book evenings, weekends, or whenever fits your life.</p>
+      </div>
+
+      <div class="card fade-up" style="transition-delay:0.19s;">
+        <div class="icon-box" style="background:var(--red-wash);">💡</div>
+        <h3 style="font-size:18px;margin-bottom:10px;">Actually Enjoy Learning</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Lessons built around what you love — dramas, music, travel, food. When learning is engaging, progress happens naturally.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section id="about" class="py-24 px-6" style="background:var(--white);">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <div class="fade-up relative" style="padding-bottom:24px;">
+        <div style="background:var(--navy); border-radius:2px; padding:52px 40px; position:relative; overflow:hidden;">
+          <div class="dancheong-bg absolute inset-0 pointer-events-none"></div>
+          <svg aria-hidden="true" style="position:absolute;bottom:-30px;right:-30px;width:170px;height:170px;opacity:0.07;" viewBox="0 0 170 170" fill="none">
+            <circle cx="85" cy="85" r="80" stroke="white" stroke-width="1"/>
+            <circle cx="85" cy="85" r="52" stroke="white" stroke-width="1"/>
+            <circle cx="85" cy="85" r="24" stroke="white" stroke-width="1.5"/>
+          </svg>
+
+          <div class="relative z-10">
+            <p class="kr" style="font-size:12px;font-weight:400;color:rgba(255,255,255,0.35);letter-spacing:0.15em;margin-bottom:6px;">튜터 소개</p>
+            <h2 style="font-size:clamp(42px,5.5vw,64px);font-weight:400;color:#fff;line-height:1;margin-bottom:6px;">Bok</h2>
+            <p style="font-size:13px;color:rgba(255,255,255,0.45);font-weight:400;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:32px;">Korean Language & Culture Teacher</p>
+
+            <div class="flex flex-wrap gap-3">
+              <span style="background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.14);border-radius:2px;padding:5px 12px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);letter-spacing:0.03em;">Master of Education</span>
+              <span style="background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.14);border-radius:2px;padding:5px 12px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);letter-spacing:0.03em;">7 Years Teaching in Seoul</span>
+              <span style="background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.14);border-radius:2px;padding:5px 12px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);letter-spacing:0.03em;">Former Melbourne Korean School Teacher</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:absolute;bottom:0;right:20px;background:var(--white);border:1px solid var(--border);border-radius:2px;padding:14px 22px;box-shadow:0 8px 28px rgba(15,22,35,0.1);">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:46px;color:var(--red);line-height:1;font-weight:500;">100<span style="font-size:22px;">+</span></p>
+          <p style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0.04em;">students helped</p>
+        </div>
+      </div>
+
+      <div class="fade-up mt-6 lg:mt-0" style="transition-delay:0.15s;">
+        <div class="s-label">About Bok</div>
+        <h2 style="font-size:clamp(32px,4.5vw,48px);line-height:1.1;margin-bottom:0;">A tutor who truly<br/><em style="color:var(--navy);">gets it.</em></h2>
+        <div class="rule"></div>
+
+        <p style="font-size:15.5px;line-height:1.78;color:var(--ink2);margin-bottom:18px;">Annyeonghaseyo! Hello! I’m Bok. If you’ve ever felt a bit overwhelmed by the thought of learning Korean, I want you to take a deep breath. You’re in the right place, and I’m so glad you’re here.</p>
+        <p style="font-size:15.5px;line-height:1.78;color:var(--ink2);margin-bottom:18px;">My teaching journey started in the heart of Seoul, where I spent seven incredible years helping students connect with the Korean language. Eventually, life brought me to Melbourne, where I continued sharing my love for my native language at a local school. Over the years, I also earned a Master of Education. While I appreciate the academic side of things, my real passion lies in the human side of teaching. I care deeply about making sure you feel heard, supported, and excited to learn.</p>
+        <p style="font-size:15.5px;line-height:1.78;color:var(--ink2);margin-bottom:30px;">We won’t be stuck memorizing stiff textbook phrases that nobody actually uses on the streets of Seoul. Instead, we’re going to focus on real, practical conversations and the vibrant culture behind the words. Every single lesson we do together is customized for you. It is a completely relaxed, comfortable space where you can make mistakes, build your confidence, and find your own voice in Korean. Let’s make this journey fun and natural. I can't wait to meet you!</p>
+
+        <div style="background:var(--offwhite);border:1px solid var(--border);border-left:3px solid var(--navy);border-radius:2px;padding:20px 24px;margin-bottom:30px;">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;">Lesson Focus</p>
+          <div class="ck-row" style="--gold:var(--navy);"><span class="ck" style="color:var(--navy);">✓</span><span style="font-size:14px;color:var(--ink2);">Former Korean language school teacher in Melbourne</span></div>
+          <div class="ck-row" style="--gold:var(--navy);"><span class="ck" style="color:var(--navy);">✓</span><span style="font-size:14px;color:var(--ink2);">7 years teaching experience in Seoul, Korea</span></div>
+          <div class="ck-row" style="--gold:var(--navy);"><span class="ck" style="color:var(--navy);">✓</span><span style="font-size:14px;color:var(--ink2);">Master of Education</span></div>
+          <div class="ck-row" style="margin-bottom:0;"><span class="ck" style="color:var(--navy);">✓</span><span style="font-size:14px;color:var(--ink2);">Real-life conversation and Korean culture</span></div>
+        </div>
+
+        <a href="#contact" class="btn-primary">Start with a Free Lesson →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="thin-rule"></div>
+
+
+<section id="pricing" class="py-24 px-6" style="background:var(--offwhite);">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="text-center mb-14 fade-up">
+      <div class="s-label" style="justify-content:center;">Pricing</div>
+      <h2 style="font-size:clamp(36px,5vw,54px);line-height:1.1;">Simple, honest pricing.</h2>
+      <div class="rule center"></div>
+      <p style="font-size:16px;color:var(--ink2);">One clear rate. No hidden fees. No lock-in contracts.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+
+      <div class="pricing-main fade-up" style="transition-delay:0.08s;">
+        <div style="padding:44px 40px;position:relative;z-index:1;">
+          <p style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:20px;">Private Lesson Rate</p>
+          <div class="price-num mb-2"><sup>$</sup>35<small> / hour</small></div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:36px;letter-spacing:0.03em;">CBD · 50-minute lessons</p>
+          <div style="height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:28px;"></div>
+          <div class="ck-row"><span class="ck">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.8);">100% personalised lesson plan</span></div>
+          <div class="ck-row"><span class="ck">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.8);">Custom study materials &amp; resources</span></div>
+          <div class="ck-row"><span class="ck">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.8);">Homework &amp; practice exercises</span></div>
+          <div class="ck-row"><span class="ck">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.8);">WhatsApp support between sessions</span></div>
+          <div class="ck-row" style="margin-bottom:0;"><span class="ck">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.8);">No lock-in — book lesson by lesson</span></div>
+          <div style="height:1px;background:rgba(255,255,255,0.07);margin:32px 0;"></div>
+          <a href="#contact" class="btn-primary red w-full justify-center">Book Your Free Trial Lesson</a>
+        </div>
+      </div>
+
+      <div class="fade-up flex flex-col gap-5" style="transition-delay:0.18s;">
+
+        <div class="card" style="border-left:3px solid var(--red);">
+          <div class="icon-box" style="background:var(--red-wash);">🎁</div>
+          <h3 style="font-size:18px;color:var(--red);margin-bottom:8px;">Free 30-Minute Trial Lesson</h3>
+          <p style="font-size:14px;line-height:1.72;color:var(--muted);">No payment, no commitment. A relaxed 30-minute free trial lesson to meet Bok, discuss your goals, and see if the lessons are right for you.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon-box" style="background:var(--navy-wash);">📅</div>
+          <h3 style="font-size:18px;margin-bottom:8px;">Practical Lesson Format</h3>
+          <p style="font-size:14px;line-height:1.72;color:var(--muted);">Lessons are available in the CBD. Bok offers supportive, practical Korean lessons designed around your goals and level.</p>
+        </div>
+
+        <div class="card" style="background:var(--offwhite);">
+          <div class="icon-box" style="background:var(--surface);">📍</div>
+          <h3 style="font-size:18px;margin-bottom:8px;">CBD Lessons Available</h3>
+          <p style="font-size:14px;line-height:1.72;color:var(--muted);">Lessons are available in the CBD at $35 per 50-minute lesson. Enquire to arrange a suitable time.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="who" class="py-24 px-6" style="background:var(--white);">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="text-center mb-14 fade-up">
+      <div class="s-label" style="justify-content:center;">Who It's For</div>
+      <h2 style="font-size:clamp(36px,5vw,54px);line-height:1.1;">Made for learners like you.</h2>
+      <div class="rule center"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="a-card fade-up" style="transition-delay:0.07s;">
+        <div class="a-icon" style="background:var(--navy-wash);">📚</div>
+        <h3 style="font-size:19px;margin-bottom:10px;">VCE Students</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Targeted exam prep covering reading, writing, listening and speaking. Walk into every SAC and final exam with confidence and clarity.</p>
+        <span class="a-tag">Units 1–4 · SAC &amp; Exam Prep</span>
+      </div>
+
+      <div class="a-card fade-up" style="transition-delay:0.15s;">
+        <div class="a-icon" style="background:var(--red-wash);">🎵</div>
+        <h3 style="font-size:19px;margin-bottom:10px;">K-Pop &amp; K-Drama Fans</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Stop relying on subtitles. Start from zero and build the Korean to understand your favourite songs and shows — for real.</p>
+        <span class="a-tag">Beginner Friendly · Zero Experience</span>
+      </div>
+
+      <div class="a-card fade-up" style="transition-delay:0.23s;">
+        <div class="a-icon" style="background:#eef5ee;">💼</div>
+        <h3 style="font-size:19px;margin-bottom:10px;">Adults &amp; Professionals</h3>
+        <p style="font-size:14px;line-height:1.72;color:var(--muted);">Travel, family, business, or curiosity — build the conversational Korean you actually need, at a pace that suits adult life.</p>
+        <span class="a-tag">Conversational · Real-World Korean</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="thin-rule"></div>
+
+
+<section id="testimonials" class="py-24 px-6" style="background:var(--offwhite);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-14 fade-up">
+      <div class="s-label" style="justify-content:center;">Student Stories</div>
+      <h2 style="font-size:clamp(36px,5vw,54px);line-height:1.1;">Don't take our word for it.</h2>
+      <div class="rule center"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="t-card fade-up" style="transition-delay:0.07s;">
+        <div class="qm">"</div>
+        <div class="stars mb-4" style="padding-top:20px;">★★★★★</div>
+        <p style="font-size:15px;line-height:1.76;color:var(--ink2);margin-bottom:22px;">I started Korean feeling completely lost. Bok broke everything down in a way that finally made sense. She is patient, thorough, and incredibly encouraging.</p>
+        <div class="flex items-center gap-3" style="padding-top:18px;border-top:1px solid var(--border);">
+          <div class="avatar" style="background:var(--navy);">E</div>
+          <div><p style="font-size:14px;font-weight:600;color:var(--ink);">Emily T.</p><p style="font-size:12px;color:var(--muted);">Korean student</p></div>
+        </div>
+      </div>
+
+      <div class="t-card fade-up" style="transition-delay:0.15s;">
+        <div class="qm">"</div>
+        <div class="stars mb-4" style="padding-top:20px;">★★★★★</div>
+        <p style="font-size:15px;line-height:1.76;color:var(--ink2);margin-bottom:22px;">Bok has been absolutely wonderful — reliable, supportive, and clear. The lessons are practical and confidence-building.</p>
+        <div class="flex items-center gap-3" style="padding-top:18px;border-top:1px solid var(--border);">
+          <div class="avatar" style="background:var(--ink2);">J</div>
+          <div><p style="font-size:14px;font-weight:600;color:var(--ink);">James P.</p><p style="font-size:12px;color:var(--muted);">Student</p></div>
+        </div>
+      </div>
+
+      <div class="t-card fade-up" style="transition-delay:0.23s;">
+        <div class="qm">"</div>
+        <div class="stars mb-4" style="padding-top:20px;">★★★★★</div>
+        <p style="font-size:15px;line-height:1.76;color:var(--ink2);margin-bottom:22px;">Bok made me feel completely at ease as an adult beginner. The lessons are practical, cultural, and genuinely fun.</p>
+        <div class="flex items-center gap-3" style="padding-top:18px;border-top:1px solid var(--border);">
+          <div class="avatar" style="background:var(--gold);">S</div>
+          <div><p style="font-size:14px;font-weight:600;color:var(--ink);">Sarah M.</p><p style="font-size:12px;color:var(--muted);">Adult learner · K-drama fan</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="py-24 px-6 text-center relative overflow-hidden" style="background:var(--navy);">
+  <div class="dancheong-bg absolute inset-0 pointer-events-none" style="opacity:0.45;"></div>
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+    <span class="kr" style="font-size:clamp(80px,18vw,260px);font-weight:300;color:rgba(255,255,255,0.025);white-space:nowrap;letter-spacing:-4px;">시작하세요</span>
+  </div>
+  <svg aria-hidden="true" style="position:absolute;top:-70px;right:-70px;width:300px;height:300px;opacity:0.06;pointer-events:none;" viewBox="0 0 300 300" fill="none">
+    <circle cx="150" cy="150" r="140" stroke="white" stroke-width="1"/>
+    <circle cx="150" cy="150" r="95"  stroke="white" stroke-width="1"/>
+    <circle cx="150" cy="150" r="52"  stroke="#c0392b" stroke-width="1.5"/>
+  </svg>
+
+  <div class="max-w-2xl mx-auto relative z-10 fade-up">
+    <div class="s-label justify-center mb-6" style="color:rgba(255,255,255,0.4);">
+      <span style="background:var(--gold);height:1.5px;width:20px;display:inline-block;"></span>
+      Your First Step
+    </div>
+    <h2 style="font-size:clamp(38px,6vw,64px);color:#fff;line-height:1.08;margin-bottom:16px;">Ready to start speaking<br/><em>Korean?</em></h2>
+    <p style="font-size:17px;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:36px;font-weight:300;">Your free trial lesson is 30 minutes. No pressure, no commitment — just you, Bok, and 30 minutes of Korean conversation and culture.</p>
+    <a href="#contact" class="btn-primary red" style="font-size:16px;padding:16px 36px;">Book Your Free Trial Now</a>
+    <p style="margin-top:16px;font-size:13px;color:rgba(255,255,255,0.28);letter-spacing:0.03em;">$35 per 50-minute lesson · CBD lessons available</p>
+  </div>
+</section>
+
+
+<section id="contact" class="py-24 px-6" style="background:var(--white);">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="text-center mb-14 fade-up">
+      <div class="s-label" style="justify-content:center;">Book Now</div>
+      <h2 style="font-size:clamp(36px,5vw,54px);line-height:1.1;">Book your free trial lesson.</h2>
+      <div class="rule center"></div>
+      <p style="font-size:16px;color:var(--ink2);max-width:460px;margin:0 auto;">Fill in the form below or call Bok directly to arrange your free 30-minute trial lesson.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
+
+      <div class="lg:col-span-3 fade-up" style="transition-delay:0.1s;">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:2px;padding:40px 36px;">
+          <form id="bookingForm" onsubmit="handleSubmit(event)">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+              <div><label class="f-label">Your name *</label><input type="text" class="f-field" placeholder="Emma Wilson" required /></div>
+              <div><label class="f-label">Email address *</label><input type="email" class="f-field" placeholder="emma@email.com" required /></div>
+            </div>
+            <div class="mb-5"><label class="f-label">Phone (optional)</label><input type="tel" class="f-field" placeholder="0412 345 678" /></div>
+            <div class="mb-5">
+              <label class="f-label">I am a… *</label>
+              <select class="f-field" required>
+                <option value="" disabled selected>Select your category</option>
+                <option>VCE student (Year 11 or 12)</option>
+                <option>High school student (Year 7–10)</option>
+                <option>Complete beginner / K-pop or K-drama fan</option>
+                <option>Adult learner wanting conversational Korean</option>
+                <option>Parent booking for my child</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="mb-5">
+              <label class="f-label">Preferred lesson format</label>
+              <select class="f-field">
+                <option>Online (Zoom)</option>
+                <option>In-person (Melbourne) — enquire for availability</option>
+                <option>Either is fine</option>
+              </select>
+            </div>
+            <div class="mb-7"><label class="f-label">Tell Bok about your goals *</label><textarea class="f-field" rows="4" placeholder="e.g. I want to improve real-life Korean conversation, learn Korean culture, or start beginner Korean lessons…" required style="resize:vertical;"></textarea></div>
+            <button type="submit" class="btn-primary w-full justify-center" style="font-size:15px;padding:16px;border-radius:3px;">
+              Send Booking Request
+            </button>
+            <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:12px;">Bok typically responds within a few hours.</p>
+          </form>
+
+          <div id="successMsg" class="hidden text-center py-10">
+            <p class="kr" style="font-size:54px;color:var(--navy);margin-bottom:12px;">감사합니다</p>
+            <h3 style="font-size:28px;font-family:'Cormorant Garamond',serif;margin-bottom:10px;">You're all set!</h3>
+            <p style="font-size:16px;line-height:1.7;color:var(--muted);max-width:300px;margin:0 auto;">Bok will be in touch to confirm your free 30-minute trial lesson.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2 fade-up flex flex-col gap-5" style="transition-delay:0.2s;">
+
+        <div class="card">
+          <div class="icon-box" style="background:var(--navy-wash);">📋</div>
+          <h3 style="font-size:17px;margin-bottom:10px;">What happens next?</h3>
+          <ol style="font-size:14px;line-height:1.82;color:var(--muted);padding-left:18px;">
+            <li style="margin-bottom:6px;">You send your booking request</li>
+            <li style="margin-bottom:6px;">Bok contacts you within 24 hrs</li>
+            <li style="margin-bottom:6px;">You agree on a day &amp; time</li>
+            <li>Your free 30-minute trial begins!</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <div class="icon-box" style="background:var(--red-wash);">✉️</div>
+          <h3 style="font-size:17px;margin-bottom:8px;">Prefer to email directly?</h3>
+          <p style="font-size:14px;line-height:1.65;color:var(--muted);margin-bottom:12px;">Call Bok directly:</p>
+          <a href="tel:0452565415" style="color:var(--navy);font-weight:600;font-size:14px;word-break:break-all;">0452 565 415</a>
+        </div>
+
+        <div style="background:var(--navy);border-radius:2px;padding:24px;position:relative;overflow:hidden;">
+          <div class="dancheong-bg absolute inset-0 pointer-events-none" style="opacity:0.4;"></div>
+          <div class="relative z-10">
+            <p class="kr" style="font-size:19px;color:rgba(255,255,255,0.65);margin-bottom:8px;font-weight:300;">시작이 반이다</p>
+            <p style="font-size:13px;color:rgba(255,255,255,0.38);font-style:italic;">"Starting is half the battle."</p>
+            <p style="font-size:11px;color:rgba(255,255,255,0.22);margin-top:6px;letter-spacing:0.06em;">— Korean proverb</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer style="background:var(--ink);color:rgba(255,255,255,0.42);">
+  <div class="max-w-6xl mx-auto px-6 py-14">
+
+    <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="14.5" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="8.5"  stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <circle cx="16" cy="16" r="3"    fill="rgba(192,57,43,0.8)"/>
+            <line x1="2" y1="16" x2="7.5" y2="16" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="24.5" y1="16" x2="30" y2="16" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="16" y1="2" x2="16" y2="7.5" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="16" y1="24.5" x2="16" y2="30" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          </svg>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:#fff;">Korean with Bok</span>
+        </div>
+        <p style="font-size:13px;max-width:220px;line-height:1.65;">Korean language &amp; culture lessons. Melbourne CBD.</p>
+      </div>
+
+      <div>
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.22);margin-bottom:14px;">Navigation</p>
+        <div class="flex flex-col gap-3">
+          <a href="#benefits"     style="color:rgba(255,255,255,0.42);font-size:14px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.42)'">Benefits</a>
+          <a href="#about"        style="color:rgba(255,255,255,0.42);font-size:14px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.42)'">About Bok</a>
+          <a href="#pricing"      style="color:rgba(255,255,255,0.42);font-size:14px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.42)'">Pricing</a>
+          <a href="#testimonials" style="color:rgba(255,255,255,0.42);font-size:14px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.42)'">Reviews</a>
+          <a href="#contact"      style="color:rgba(255,255,255,0.42);font-size:14px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.42)'">Contact</a>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.22);margin-bottom:14px;">Contact</p>
+        <a href="tel:0452565415" style="color:rgba(255,255,255,0.6);font-size:14px;text-decoration:none;display:block;margin-bottom:14px;">0452 565 415</a>
+        <a href="#contact" class="btn-primary red" style="font-size:13px;padding:10px 18px;border-radius:2px;">Book Free Trial →</a>
+      </div>
+
+    </div>
+
+    <div style="height:1px;background:rgba(255,255,255,0.06);margin:36px 0;"></div>
+
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p style="font-size:12px;">© 2025 Korean with Bok. All rights reserved.</p>
+      <p class="kr" style="font-size:13px;color:rgba(255,255,255,0.18);font-weight:300;">한국어를 배워보세요</p>
+    </div>
+  </div>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">↑</button>
+
+
+<script>
+  // ── Navbar scroll state ──
+  const navbar = document.getElementById('navbar');
+  const scrollTopBtn = document.getElementById('scrollTop');
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    scrollTopBtn.classList.toggle('show', window.scrollY > 500);
+  }, { passive: true });
+
+  // ── Mobile menu ──
+  const menuBtn    = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  let menuOpen = false;
+
+  menuBtn.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('open', menuOpen);
+    document.getElementById('bar1').style.transform = menuOpen ? 'translateY(6.5px) rotate(45deg)' : '';
+    document.getElementById('bar2').style.opacity   = menuOpen ? '0' : '1';
+    document.getElementById('bar3').style.transform = menuOpen ? 'translateY(-6.5px) rotate(-45deg)' : '';
+  });
+
+  function closeMobileMenu() {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    document.getElementById('bar1').style.transform = '';
+    document.getElementById('bar2').style.opacity   = '1';
+    document.getElementById('bar3').style.transform = '';
+  }
+
+  // ── Scroll fade-in ──
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  fadeEls.forEach(el => io.observe(el));
+
+  // Hero elements fire immediately with stagger
+  document.querySelectorAll('#hero .fade-up').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 80 + i * 90);
+  });
+
+  // ── Booking form ──
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('bookingForm').style.display = 'none';
+    const msg = document.getElementById('successMsg');
+    msg.classList.remove('hidden');
+    msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+</script>
+
+</body>
+</html>
